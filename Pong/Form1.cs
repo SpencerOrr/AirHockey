@@ -15,6 +15,8 @@ namespace Pong
         Rectangle player1 = new Rectangle(180, 20, 60, 10);
         Rectangle player2 = new Rectangle(180, 380, 60, 10);
         Rectangle ball = new Rectangle(295, 195, 10, 10);
+        Rectangle goal2 = new Rectangle(170, 0, 80, 10);
+        Rectangle goal1 = new Rectangle(170, 390, 80, 10);
 
         int player1Score = 0;
         int player2Score = 0;
@@ -22,16 +24,9 @@ namespace Pong
         int playerSpeed = 5;
         int ballXSpeed = 4;
         int ballYSpeed = -4;
-        int player1X, player2X, player1Y, player2Y;
 
-        int deltaLeft = 0;
-        int deltaRight = 0;
-        int deltaUp = 0;
-        int deltaDown = 0;
         int originalBallX = 0;
-        int originalBallY = 0;
-        int hittingBallX = 0;
-        int hittingBallY = 0;
+        int originalBallY = 0;              
 
         bool wDown = false;
         bool sDown = false;
@@ -44,6 +39,8 @@ namespace Pong
 
         SolidBrush blueBrush = new SolidBrush(Color.DodgerBlue);
         SolidBrush whiteBrush = new SolidBrush(Color.White);
+        SolidBrush redBrush = new SolidBrush(Color.Red);
+        SolidBrush greenBrush = new SolidBrush(Color.Green);
 
         public Form1()
         {
@@ -115,9 +112,11 @@ namespace Pong
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(blueBrush, player1);
+            e.Graphics.FillRectangle(greenBrush, player1);
             e.Graphics.FillRectangle(blueBrush, player2);
             e.Graphics.FillRectangle(whiteBrush, ball);
+            e.Graphics.FillRectangle(redBrush, goal1);
+            e.Graphics.FillRectangle(redBrush, goal2);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -131,6 +130,7 @@ namespace Pong
                 originalBallY = ball.Y;
             }
 
+            // player1 movement
             if (wDown == true && player1.Y > 0)
             {
                 player1.Y -= playerSpeed;
@@ -148,6 +148,7 @@ namespace Pong
                 player1.X += playerSpeed;
             }
 
+            // player2 movement
             if (upArrowDown == true && player2.Y > 0)
             {
                 player2.Y -= playerSpeed;
@@ -165,8 +166,8 @@ namespace Pong
                 player2.X += playerSpeed;
             }
 
-            //check if ball hit top or bottom wall and change direction if it does 
-
+            //check  if  ball  hit  top  or  bottom  wall  
+            //check  if  ball  hit  side  walls  
             if (ball.Y < 0 || ball.Y > this.Height - ball.Height)
             {
                 ballYSpeed *= -1;  // or: ballYSpeed = -ballYSpeed; 
@@ -183,8 +184,37 @@ namespace Pong
             {
                 ballXSpeed *= -1;
             }
-            //check if ball hits either player. If it does change the direction 
-            //and place the ball in front of the player hit
+
+            //check if ball hits the goal
+            if (ball.IntersectsWith(goal1) == true)
+            {                       
+                ball.X = 195;
+                ball.Y = 295;
+
+                player1.X = 180;
+                player1.Y = 20;
+
+                player2.X = 180;
+                player2.Y = 380;
+
+                player2Score += 1;
+                p2ScoreLabel.Text = player2Score + "";
+            }
+            if (ball.IntersectsWith(goal2) == true)
+            {
+                ball.X = 195;
+                ball.Y = 295;
+
+                player1.X = 180;
+                player1.Y = 20;
+
+                player2.X = 180;
+                player2.Y = 380;
+
+                player1Score += 1;
+                p1ScoreLabel.Text = player1Score + "";
+            }
+            //check  if  ball  hits  either  player           
             if (player2.IntersectsWith(ball) == true)
             {
                 // above
@@ -239,7 +269,7 @@ namespace Pong
                     ballXSpeed *= -1;
                 }
             }
-            // check score and stop game if either player is at 3 
+            // stop  game  if  a  player  is  at  3 
             if (player1Score == 3)
             {
                 gameTimer.Enabled = false;
@@ -254,6 +284,6 @@ namespace Pong
             }
 
             Refresh();
-        }
+        }       
     }
 }
