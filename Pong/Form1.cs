@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
 namespace Pong
 {
@@ -46,6 +47,8 @@ namespace Pong
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush greenBrush = new SolidBrush(Color.Green);
         Pen whitePen = new Pen(Color.White);
+        SoundPlayer goal = new SoundPlayer(Properties.Resources.goal);
+        SoundPlayer hit = new SoundPlayer(Properties.Resources.hit);
 
         public Form1()
         {
@@ -195,6 +198,7 @@ namespace Pong
             //check if ball hits the goal
             if (ball.IntersectsWith(goal1) == true)
             {
+                goal.Play();
                 ball.X = 195;
                 ball.Y = 295;
 
@@ -209,6 +213,7 @@ namespace Pong
             }
             if (ball.IntersectsWith(goal2) == true)
             {
+                goal.Play();
                 ball.X = 195;
                 ball.Y = 295;
 
@@ -224,6 +229,7 @@ namespace Pong
             //check  if  ball  hits  either  player           
             if (player2.IntersectsWith(ball) == true)
             {
+                hit.Play();
                 // above
                 if (originalBallY > player2.Y)
                 {
@@ -255,6 +261,7 @@ namespace Pong
             }
             if (player1.IntersectsWith(ball))
             {
+                hit.Play();
                 // above
                 if (originalBallY > player1.Y)
                 {
