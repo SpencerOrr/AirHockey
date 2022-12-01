@@ -12,13 +12,13 @@ using System.Media;
 namespace Pong
 {
     public partial class Form1 : Form
-    {     
+    {
         Rectangle middleLine = new Rectangle(0, 195, 500, 5);
         Rectangle goal1 = new Rectangle(170, 0, 80, 10);
         Rectangle goal2 = new Rectangle(170, 390, 80, 10);
         Rectangle player1 = new Rectangle(180, 20, 20, 20);
         Rectangle player2 = new Rectangle(180, 380, 20, 20);
-        Rectangle ball = new Rectangle(295, 195, 10, 10);       
+        Rectangle ball = new Rectangle(295, 195, 10, 10);
 
 
         int player1Score = 0;
@@ -46,9 +46,12 @@ namespace Pong
         SolidBrush whiteBrush = new SolidBrush(Color.White);
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush greenBrush = new SolidBrush(Color.Green);
-        Pen whitePen = new Pen(Color.White);
+        Pen whitePen = new Pen(Color.White, 5);
+
         SoundPlayer goal = new SoundPlayer(Properties.Resources.goal);
         SoundPlayer hit = new SoundPlayer(Properties.Resources.hit);
+
+
 
         public Form1()
         {
@@ -119,21 +122,23 @@ namespace Pong
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
-        {          
+        {
+            e.Graphics.DrawEllipse(whitePen, 110, -80, 200, 150);
+            e.Graphics.DrawEllipse(whitePen, 110, 330, 200, 150);
             e.Graphics.FillRectangle(whiteBrush, middleLine);
             e.Graphics.FillRectangle(redBrush, goal1);
             e.Graphics.FillRectangle(redBrush, goal2);
             e.Graphics.FillRectangle(greenBrush, player1);
             e.Graphics.FillRectangle(blueBrush, player2);
             e.Graphics.FillRectangle(whiteBrush, ball);
-           
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             ball.X += ballXSpeed;
             ball.Y += ballYSpeed;
-
+         
             if (player2.IntersectsWith(ball) == false || player1.IntersectsWith(ball) == false)
             {
                 originalBallX = ball.X;
@@ -235,7 +240,7 @@ namespace Pong
                 {
                     ball.Y = player2.Y + player2.Height;
                     ballYSpeed *= -1;
-                    ballXSpeed = randGen.Next(-5,5);
+                    ballXSpeed = randGen.Next(-5, 5);
                 }
                 // below 
                 else if (originalBallY < player2.Y)
