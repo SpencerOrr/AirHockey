@@ -11,12 +11,14 @@ using System.Windows.Forms;
 namespace Pong
 {
     public partial class Form1 : Form
-    {
-        Rectangle player1 = new Rectangle(180, 20, 60, 10);
-        Rectangle player2 = new Rectangle(180, 380, 60, 10);
-        Rectangle ball = new Rectangle(295, 195, 10, 10);
-        Rectangle goal2 = new Rectangle(170, 0, 80, 10);
-        Rectangle goal1 = new Rectangle(170, 390, 80, 10);
+    {     
+        Rectangle middleLine = new Rectangle(0, 195, 500, 5);
+        Rectangle goal1 = new Rectangle(170, 0, 80, 10);
+        Rectangle goal2 = new Rectangle(170, 390, 80, 10);
+        Rectangle player1 = new Rectangle(180, 20, 20, 20);
+        Rectangle player2 = new Rectangle(180, 380, 20, 20);
+        Rectangle ball = new Rectangle(295, 195, 10, 10);       
+
 
         int player1Score = 0;
         int player2Score = 0;
@@ -26,7 +28,7 @@ namespace Pong
         int ballYSpeed = -4;
 
         int originalBallX = 0;
-        int originalBallY = 0;              
+        int originalBallY = 0;
 
         bool wDown = false;
         bool sDown = false;
@@ -37,10 +39,13 @@ namespace Pong
         bool rightArrowDown = false;
         bool leftArrowDown = false;
 
+        Random randGen = new Random();
+
         SolidBrush blueBrush = new SolidBrush(Color.DodgerBlue);
         SolidBrush whiteBrush = new SolidBrush(Color.White);
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush greenBrush = new SolidBrush(Color.Green);
+        Pen whitePen = new Pen(Color.White);
 
         public Form1()
         {
@@ -111,12 +116,14 @@ namespace Pong
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
-        {
+        {          
+            e.Graphics.FillRectangle(whiteBrush, middleLine);
+            e.Graphics.FillRectangle(redBrush, goal1);
+            e.Graphics.FillRectangle(redBrush, goal2);
             e.Graphics.FillRectangle(greenBrush, player1);
             e.Graphics.FillRectangle(blueBrush, player2);
             e.Graphics.FillRectangle(whiteBrush, ball);
-            e.Graphics.FillRectangle(redBrush, goal1);
-            e.Graphics.FillRectangle(redBrush, goal2);
+           
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -187,7 +194,7 @@ namespace Pong
 
             //check if ball hits the goal
             if (ball.IntersectsWith(goal1) == true)
-            {                       
+            {
                 ball.X = 195;
                 ball.Y = 295;
 
@@ -222,24 +229,28 @@ namespace Pong
                 {
                     ball.Y = player2.Y + player2.Height;
                     ballYSpeed *= -1;
+                    ballXSpeed = randGen.Next(-5,5);
                 }
                 // below 
                 else if (originalBallY < player2.Y)
                 {
                     ball.Y = player2.Y - player2.Height;
                     ballYSpeed *= -1;
+                    ballXSpeed = randGen.Next(-5, 5);
                 }
                 // on right side
                 else if (originalBallX > player2.X)
                 {
                     ball.X = player2.X + player2.Width;
                     ballXSpeed *= -1;
+                    ballYSpeed = randGen.Next(-5, 5);
                 }
                 // on left side  
                 else if (originalBallX < player2.X)
                 {
                     ball.X = player2.X - player2.Width;
                     ballXSpeed *= -1;
+                    ballYSpeed = randGen.Next(-5, 5);
                 }
             }
             if (player1.IntersectsWith(ball))
@@ -249,24 +260,28 @@ namespace Pong
                 {
                     ball.Y = player1.Y + player1.Height;
                     ballYSpeed *= -1;
+                    ballXSpeed = randGen.Next(-5, 5);
                 }
                 // below 
                 else if (originalBallY < player1.Y)
                 {
                     ball.Y = player1.Y - player1.Height;
                     ballYSpeed *= -1;
+                    ballXSpeed = randGen.Next(-5, 5);
                 }
                 // on right side
                 else if (originalBallX > player1.X)
                 {
                     ball.X = player1.X + player1.Width;
                     ballXSpeed *= -1;
+                    ballYSpeed = randGen.Next(-5, 5);
                 }
                 // on left side  
                 else if (originalBallX < player1.X)
                 {
                     ball.X = player1.X - player1.Width;
                     ballXSpeed *= -1;
+                    ballYSpeed = randGen.Next(-5, 5);
                 }
             }
             // stop  game  if  a  player  is  at  3 
@@ -284,6 +299,6 @@ namespace Pong
             }
 
             Refresh();
-        }       
+        }
     }
 }
